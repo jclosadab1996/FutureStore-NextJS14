@@ -22,4 +22,4 @@ type CartItem = {
   id: string;
   image: string;
   merchandiseId: string;
-}
+};

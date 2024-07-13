@@ -1,37 +1,37 @@
-import { ProductView } from "app/components/product/ProductView"
-import { getProducts } from "app/services/shopify/products"
-import { redirect } from "next/navigation"
-
+import { redirect } from "next/navigation";
+import { ProductView } from "app/components/product/ProductView";
+import { getProducts } from "app/services/shopify/products";
+import sanitizeHtml from "sanitize-html";
 
 interface ProductPageProps {
   searchParams: {
-    id: string
-  }
+    id: string;
+  };
 }
 
-export async function generateMetadata({ searchParams }: ProductPageProps) { 
-  const id = searchParams.id
-  const products = await getProducts(id)
-  const product = products[0]
+export async function generateMetadata({ searchParams }: ProductPageProps) {
+  const id = searchParams.id;
+  const products = await getProducts(id);
 
   return {
-    title: product.title,
-    description: product.description,
-    keywords: product.tags,
+    title: `${products[0].title} | Future World`,
+    description: sanitizeHtml(products[0].description, { allowedTags: [] }),
     openGraph: {
-      images: [product.image]
-    }
-  }
+      images: [
+        {
+          url: products[0].image,
+          alt: products[0].title,
+        },
+      ],
+    },
+  };
 }
 
 export default async function ProductPage({ searchParams }: ProductPageProps) {
-  const id = searchParams.id
-  const products = await getProducts(id)
-  const product = products[0]
+  const id = searchParams.id;
+  const products = await getProducts(id);
 
-  if (!id) {
-    redirect('/')
-  }
+  if (!id) redirect("/store");
 
-  return <ProductView product={product} />
+  return <ProductView product={products[0]} />;
 }

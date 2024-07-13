@@ -1,1 +1,1 @@
-export { NewAccountForm } from './NewAccountForm'
+export { NewAccountForm } from "./NewAccountForm";

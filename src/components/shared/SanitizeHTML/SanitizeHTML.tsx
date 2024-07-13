@@ -1,5 +1,5 @@
 import { HTMLAttributes, createElement } from "react";
-import sanitize from 'sanitize-html'
+import sanitize from "sanitize-html";
 
 type SanitizeHTMLProps = {
   children: string;
@@ -8,12 +8,13 @@ type SanitizeHTMLProps = {
 
 export const SanitizeHTML = ({ tag, children, ...rest }: SanitizeHTMLProps) => {
   const sanitizedHTML = sanitize(children, {
-    allowedTags: ['b', 'i', 'em', 'strong']
+    allowedTags: ["b", "i", "em", "strong", "br"],
   });
-
   return createElement(
     tag,
-    { ...rest },
+    {
+      ...rest,
+    },
     sanitizedHTML
-  )
+  );
 };

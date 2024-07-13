@@ -1,0 +1,10 @@
+SHOPIFY_HOSTNAME="https://my-store-name.myshopify.com/"
+SHOPIFY_TOKEN="abc123"
+
+# https://randomkeygen.com/ (best use a 256-bit key)
+CACHE_TOKEN="DD96745D9485EAD4AB843E9C82514"
+
+SHOPIFY_GRAPHQL_ENDPOINT="https://my-store-name.myshopify.com/api/2023-10/graphql.json"
+SHOPIFY_STOREFRONT_TOKEN="abc456"
+
+OPENAI_API_KEY="abc678"

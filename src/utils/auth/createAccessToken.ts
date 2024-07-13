@@ -1,25 +1,50 @@
-import { GraphQLClientSingleton } from "app/graphql"
-import { customerAccessTokenCreateMutation } from "app/graphql/mutations/customerAccessTokenCreate"
-import { cookies } from 'next/headers'
+import { GraphQLClientSingleton } from "app/graphql";
+import { customerAccessTokenCreateMutation } from "app/graphql/mutations/customerAccessTokenCreate";
+import { cookies } from "next/headers";
 
+type CustomerAccessTokenCreateMutationType = {
+  customerAccessTokenCreate: {
+    customerAccessToken: {
+      accessToken: string;
+      expiresAt: string;
+    };
+  };
+};
 export const createAccessToken = async (email: string, password: string) => {
-  const cookiesStore = cookies()
-  const graphqlClient = GraphQLClientSingleton.getInstance().getClient()
-  const { customerAccessTokenCreate } = await graphqlClient.request(customerAccessTokenCreateMutation, {
-    "email": email,
-    "password": password
-  })
+  const cookieStore = cookies();
 
-  const { accessToken, expiresAt } = customerAccessTokenCreate?.customerAccessToken
+  const graphqlClient = GraphQLClientSingleton.getInstance().getClient();
 
-  if(accessToken){
-    cookiesStore.set("accessToken", accessToken, {
-      path: "/",
-      expires: new Date(expiresAt),
-      httpOnly: true,
-      sameSite: "strict"
-    })
+  const { customerAccessTokenCreate }: CustomerAccessTokenCreateMutationType =
+    await graphqlClient.request(customerAccessTokenCreateMutation, {
+      email,
+      password,
+    });
 
-    return accessToken
+  /* 
+    console.log(customerAccessTokenCreate);
+    
+    response example 👇
+    customerAccessTokenCreate:  {
+        customerAccessToken: {
+        accessToken: 'b93c2cd81d0dc586e3f40f490eb4f019',
+        expiresAt: '2024-02-11T22:51:21Z'
+        }
+  */
+  console.log("👀 customerAccessTokenCreate: ", customerAccessTokenCreate);
+  if (!customerAccessTokenCreate?.customerAccessToken) {
+    console.log("❌ Something went wrong creating the access token");
+    return null;
   }
-}
+
+  const { accessToken, expiresAt } =
+    customerAccessTokenCreate?.customerAccessToken;
+
+  cookieStore.set("accessToken", accessToken, {
+    path: "/",
+    expires: new Date(expiresAt),
+    httpOnly: true,
+    sameSite: "strict",
+  });
+  return accessToken;
+};

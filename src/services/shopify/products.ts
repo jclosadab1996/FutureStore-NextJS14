@@ -1,15 +1,19 @@
-import { env } from "app/config/env"
-import { shopifyUrls } from "./urls"
+import { env } from "app/config/env";
+import { shopifyUrls } from "./urls";
 
-export const getProducts = async (id?: string): Promise<ProductType[]> => {
+// https://shopify.dev/docs/api/admin-rest/2023-10/resources/product
+
+export const getProducts = async (id?: string) => {
   try {
-    const apiUrl = id ? `${shopifyUrls.products.all}?ids=${id}` : shopifyUrls.products.all
+    const apiUrl = id
+      ? `${shopifyUrls.products.all}?ids=${id}`
+      : shopifyUrls.products.all;
     const response = await fetch(apiUrl, {
       headers: new Headers({
-        'X-Shopify-Access-Token': env.SHOPIFY_TOKEN
-      })
-    })
-    const { products } = await response.json()
+        "X-Shopify-Access-Token": env.SHOPIFY_TOKEN,
+      }),
+    });
+    const { products } = await response.json();
 
     const transformedProducts = products.map((product: any) => {
       return {
@@ -22,26 +26,26 @@ export const getProducts = async (id?: string): Promise<ProductType[]> => {
         quantity: product.variants[0].inventory_quantity,
         handle: product.handle,
         tags: product.tags,
-      }
-    })
-    return transformedProducts
+      };
+    });
+    return transformedProducts;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 
 export const getMainProducts = async () => {
   const response = await fetch(shopifyUrls.products.mainProducts, {
     headers: new Headers({
-      'X-Shopify-Access-Token': env.SHOPIFY_TOKEN
+      "X-Shopify-Access-Token": env.SHOPIFY_TOKEN,
     }),
-    cache: 'force-cache',
+    cache: "force-cache",
     next: {
-      tags: ['main-products']
-    }
-  })
+      tags: ["main-products"],
+    },
+  });
 
-  const {products} = await response.json()
+  const { products } = await response.json();
 
-  return products
-}
+  return products;
+};

@@ -1,1 +1,1 @@
-export { ProductsWrapper } from './ProductsWrapper'
+export { ProductsWrapper } from "./ProductsWrapper";

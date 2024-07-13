@@ -1,17 +1,16 @@
-import { gql } from "graphql-request"
+import { gql } from "graphql-request";
 
 export const createCartMutation = gql`
-mutation cartCreate($input: CartInput) {
+  mutation cartCreate($input: CartInput) {
     cartCreate(input: $input) {
-        cart {
-            checkoutUrl
-        }
-        userErrors {
-            code
-            field
-            message
-        }
+      cart {
+        checkoutUrl
+      }
+      userErrors {
+        code
+        field
+        message
+      }
     }
-}
-
-`
+  }
+`;
